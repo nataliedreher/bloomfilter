@@ -131,15 +131,48 @@ TEST_F(test_Bloom, AddToBloom){
   shared_ptr<bloom_filter> fltr = mybloom.InitTable(100, 4);
   mybloom.AddToBloom(fltr,"banana");
   vector<int> hash_values; 
-  ASSERT_EQ(fltr->elements, 0);
+  ASSERT_EQ(fltr->elements, 1);
   add_points_to_grade(1);
   for (unsigned int i=0; i < 4; i++) {
     if (i != 28 || i != 94 || i != 74 || i != 18) {
-		ASSERT_FALSE(fltr->table[i]);
-    	add_points_to_grade(0.1);
-	} else {
-		ASSERT_TRUE(fltr->table[i]);
-    	add_points_to_grade(0.5);
-	}
+      ASSERT_FALSE(fltr->table[i]);
+      add_points_to_grade(0.1);
+    } else {
+      ASSERT_TRUE(fltr->table[i]);
+      add_points_to_grade(0.5);
+    }
+  }
+}
+
+
+TEST_F(test_Bloom, IsUsernamePossiblyAvailable){
+  Bloom mybloom;
+  shared_ptr<bloom_filter> fltr = mybloom.InitTable(100, 4);
+  mybloom.AddToBloom(fltr,"banana");
+  
+  ASSERT_TRUE(mybloom.IsUsernamePossiblyAvailable(fltr,"banana"));
+  add_points_to_grade(1);
+
+}
+
+
+
+TEST_F(test_Bloom, Clear){
+  Bloom mybloom;
+  shared_ptr<bloom_filter> fltr = mybloom.InitTable(100, 4);
+  mybloom.AddToBloom(fltr,"banana");
+  vector<int> hash_values; 
+  add_points_to_grade(1);
+  for (unsigned int i=0; i < 4; i++) {
+    if (i != 28 || i != 94 || i != 74 || i != 18) {
+      ASSERT_FALSE(fltr->table[i]);
+    } else {
+      ASSERT_TRUE(fltr->table[i]);
+    }
+  }
+  mybloom.Clear(fltr);
+  for (unsigned int i=0; i < 4; i++) {
+    ASSERT_FALSE(fltr->table[i]);  
+    add_points_to_grade(0.1);
   }
 }

@@ -86,6 +86,7 @@ void Bloom::AddToBloom(shared_ptr<bloom_filter> bloom, string username) {
     for (int i = 0; i < hashNum; i++) {
         bloom->table[hash[i]] = true;
     }
+    bloom->elements++;
 }
 
 bool Bloom::IsUsernamePossiblyAvailable(shared_ptr<bloom_filter> bloom, string username) {
@@ -115,4 +116,5 @@ void Bloom::Clear(shared_ptr<bloom_filter> bloom) {
     for (int i = 0; i < size; i++) {
         bloom->table[i] = false;
     }
+    bloom->elements = 0;
 }
