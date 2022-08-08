@@ -13,15 +13,15 @@ string(REPLACE " " "_" ProjectId ${ProjectId})
 project(${ProjectId})
 
 # defince cmake variables for file locations
-file(GLOB USER_FILES_1
-"code_1/*.h"
-"code_1/*.cpp"
-"code_1/*.hpp"
+file(GLOB USER_FILES
+"code/*.h"
+"code/*.cpp"
+"code/*.hpp"
 )
 
 
 file(GLOB TEST_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} 
-"tests/test*.cpp"
+"tests/test_*.cpp"
 )
 
 # Try to Find GTest
@@ -32,7 +32,7 @@ if(GTEST_FOUND)
 	include_directories(${GTEST_INCLUDE_DIRS})
 
 	# create an executable for all tests 
-	add_executable( run_tests ${TEST_FILES} ${USER_FILES_1} )
+	add_executable( run_tests ${TEST_FILES} ${USER_FILES} )
 	target_link_libraries( run_tests gtest_main ${GTEST_LIBRARIES} pthread)
 
 else()
@@ -64,13 +64,13 @@ else()
 	        EXCLUDE_FROM_ALL)
 
 	# create an executable for all tests 
-	add_executable( run_tests ${TEST_FILES} ${USER_FILES_1} )
+	add_executable( run_tests ${TEST_FILES} ${USER_FILES} )
 
 	target_link_libraries( run_tests gtest_main)
 
 endif()
 
-ENABLE_TESTING()
+
 
 # create an executables in the app folder
-add_executable( run_app_1 "app_1/main_1.cpp" ${USER_FILES_1} )
+add_executable( run_app_1 "app_1/main_1.cpp" ${USER_FILES} )
