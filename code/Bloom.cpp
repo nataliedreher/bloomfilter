@@ -2,13 +2,12 @@
 
 // constructor
 Bloom::Bloom() {
-    // Constructor starts with BloomFilter as NULL.
-    BloomFilter = shared_ptr<bloom_filter>(NULL);
+    // Nothing is needed here.
 }
 
-//deconstructor
+// deconstructor
 Bloom::~Bloom() {
-    // Since smart pointers are being used this can be left empty. 
+    // Nothing is needed here.
 }
 
 vector<int> Bloom::Hash(string str, shared_ptr<bloom_filter> bloom) {
@@ -40,7 +39,7 @@ vector<int> Bloom::Hash(string str, shared_ptr<bloom_filter> bloom) {
     return hash;
 }
 
-shared_ptr<bloom_filter> Bloom::InitTable(unsigned int size, bool automatic) {
+shared_ptr<bloom_filter> Bloom::InitFilter(unsigned int size, bool automatic) {
 
     // Create a new bloom_filter named ret.
     shared_ptr<bloom_filter> ret(new bloom_filter);

@@ -86,9 +86,9 @@ std::string exec(const char* cmd) {
 // Tests start here
 /////////////////////////////////////////
 
-TEST_F(test_Bloom, InitTable){
+TEST_F(test_Bloom, InitFilter){
   Bloom mybloom;
-  shared_ptr<bloom_filter> fltr = mybloom.InitTable(100);
+  shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
   ASSERT_TRUE(fltr);
   add_points_to_grade(1);
   ASSERT_EQ(fltr->size, 100);
@@ -105,9 +105,9 @@ TEST_F(test_Bloom, InitTable){
   }
 }
 
-TEST_F(test_Bloom, InitTableAuto){
+TEST_F(test_Bloom, InitFilterAuto){
   Bloom mybloom;
-  shared_ptr<bloom_filter> fltr = mybloom.InitTable(100,true);
+  shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100,true);
   ASSERT_TRUE(fltr);
   add_points_to_grade(1);
   ASSERT_EQ(fltr->size, 100);
@@ -126,7 +126,7 @@ TEST_F(test_Bloom, InitTableAuto){
 
 TEST_F(test_Bloom, Hash){
   Bloom mybloom;
-  shared_ptr<bloom_filter> fltr = mybloom.InitTable(100);
+  shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
   vector<int> test_hash_values = mybloom.Hash("banana",fltr);
   vector<int> hash_values; 
   hash_values.push_back(71);
@@ -148,7 +148,7 @@ TEST_F(test_Bloom, Hash){
 
 TEST_F(test_Bloom, AddToBloom){
   Bloom mybloom;
-  shared_ptr<bloom_filter> fltr = mybloom.InitTable(100);
+  shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
   mybloom.AddToBloom(fltr,"banana"); 
   ASSERT_EQ(fltr->elements, 1);
   add_points_to_grade(1);
@@ -165,7 +165,7 @@ TEST_F(test_Bloom, AddToBloom){
 
 TEST_F(test_Bloom, BigAddToBloom){
   Bloom mybloom;
-  shared_ptr<bloom_filter> fltr = mybloom.InitTable(100);
+  shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
 
   string users_array[20] = {"Ambiteri", "BinderJunky", "ClassyFamous", "Cyberlogy", "EternalComic", "Eyestaffer", "Flirtypwri", "Fozoanog", "InfernoBorg", "Jiggyttom", "Lawnwolfer", "Mitzillst", "Netikaem", "Noamigr", "Phreeksteb", "PrimeSpy", "Rockstonera", "RunFlirty", "Shadesntha", "Twinkle"};
   for (int i = 0; i < 20; i++) {
@@ -204,7 +204,7 @@ TEST_F(test_Bloom, BigAddToBloom){
 
 TEST_F(test_Bloom, AutoAddToBloom){
   Bloom mybloom;
-  shared_ptr<bloom_filter> fltr = mybloom.InitTable(200,true);
+  shared_ptr<bloom_filter> fltr = mybloom.InitFilter(200,true);
 
   string users_array[20] = {"Ambiteri", "BinderJunky", "ClassyFamous", "Cyberlogy", "EternalComic", "Eyestaffer", "Flirtypwri", "Fozoanog", "InfernoBorg", "Jiggyttom", "Lawnwolfer", "Mitzillst", "Netikaem", "Noamigr", "Phreeksteb", "PrimeSpy", "Rockstonera", "RunFlirty", "Shadesntha", "Twinkle"};
   for (int i = 0; i < 20; i++) {
@@ -242,7 +242,7 @@ TEST_F(test_Bloom, AutoAddToBloom){
 
 TEST_F(test_Bloom, IsUsernamePossiblyAvailable){
   Bloom mybloom;
-  shared_ptr<bloom_filter> fltr = mybloom.InitTable(100);
+  shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
   mybloom.AddToBloom(fltr,"banana");
   
   ASSERT_FALSE(mybloom.IsUsernamePossiblyAvailable(fltr,"banana"));
@@ -255,7 +255,7 @@ TEST_F(test_Bloom, IsUsernamePossiblyAvailable){
 
 TEST_F(test_Bloom, FalsePositiveChance){
   Bloom mybloom;
-  shared_ptr<bloom_filter> fltr = mybloom.InitTable(100);
+  shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
 
   string users_array[20] = {"Ambiteri", "BinderJunky", "ClassyFamous", "Cyberlogy", "EternalComic", "Eyestaffer", "Flirtypwri", "Fozoanog", "InfernoBorg", "Jiggyttom", "Lawnwolfer", "Mitzillst", "Netikaem", "Noamigr", "Phreeksteb", "PrimeSpy", "Rockstonera", "RunFlirty", "Shadesntha", "Twinkle"};
   for (int i = 0; i < 20; i++) {
@@ -273,7 +273,7 @@ TEST_F(test_Bloom, FalsePositiveChance){
 
 TEST_F(test_Bloom, Clear){
   Bloom mybloom;
-  shared_ptr<bloom_filter> fltr = mybloom.InitTable(100);
+  shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
   mybloom.AddToBloom(fltr,"banana");
   vector<int> hash_values; 
   add_points_to_grade(1);
