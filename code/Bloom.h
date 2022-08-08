@@ -16,12 +16,13 @@ struct bloom_filter {
 
   unsigned int size;
 
-  vector<bool> table;
+  vector<bool> bitTable;
 
-  int hashes;
+  vector<int> hashValues;
 
-  int elements;
+  unsigned int hashes;
 
+  unsigned int elements;
 
 };
 

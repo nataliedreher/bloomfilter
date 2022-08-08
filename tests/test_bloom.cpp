@@ -100,12 +100,12 @@ TEST_F(test_Bloom, InitTable){
   ASSERT_EQ(fltr->elements, 0);
   add_points_to_grade(1);
   for (unsigned int i=0; i < fltr->size; i++) {
-    ASSERT_FALSE(fltr->table[i]);
+    ASSERT_FALSE(fltr->bitTable[i]);
     add_points_to_grade(0.1);
   }
 }
 
-TEST_F(test_Bloom, InitTableAutomaticOn){
+TEST_F(test_Bloom, InitTableAuto){
   Bloom mybloom;
   shared_ptr<bloom_filter> fltr = mybloom.InitTable(100,true);
   ASSERT_TRUE(fltr);
@@ -119,7 +119,7 @@ TEST_F(test_Bloom, InitTableAutomaticOn){
   ASSERT_EQ(fltr->elements, 0);
   add_points_to_grade(1);
   for (unsigned int i=0; i < fltr->size; i++) {
-    ASSERT_FALSE(fltr->table[i]);
+    ASSERT_FALSE(fltr->bitTable[i]);
     add_points_to_grade(0.1);
   }
 }
@@ -129,8 +129,8 @@ TEST_F(test_Bloom, Hash){
   shared_ptr<bloom_filter> fltr = mybloom.InitTable(100);
   vector<int> test_hash_values = mybloom.Hash("banana",fltr);
   vector<int> hash_values; 
-  hash_values.push_back(32);
-  hash_values.push_back(78);
+  hash_values.push_back(71);
+  hash_values.push_back(5);
   hash_values.push_back(85);
   hash_values.push_back(43);
   ASSERT_EQ(test_hash_values.size(), 4);
@@ -154,10 +154,10 @@ TEST_F(test_Bloom, AddToBloom){
   add_points_to_grade(1);
   for (unsigned int i=0; i < 4; i++) {
     if (i != 28 || i != 94 || i != 74 || i != 18) {
-      ASSERT_FALSE(fltr->table[i]);
+      ASSERT_FALSE(fltr->bitTable[i]);
       add_points_to_grade(0.1);
     } else {
-      ASSERT_TRUE(fltr->table[i]);
+      ASSERT_TRUE(fltr->bitTable[i]);
       add_points_to_grade(0.5);
     }
   }
@@ -187,7 +187,7 @@ TEST_F(test_Bloom, BigAddToBloom){
     bool found = true;
     vector<int> hash_values = mybloom.Hash(test_users_array[i], fltr);
     for (int j = 0; j < 4; j++) {
-      if (!fltr->table[hash_values[j]]) {
+      if (!fltr->bitTable[hash_values[j]]) {
         found = false;
         break;
       }
@@ -197,6 +197,44 @@ TEST_F(test_Bloom, BigAddToBloom){
     }
   }
   float percent_true = count / 100.000;
+  ASSERT_LE(percent_true, test_value);
+  add_points_to_grade(2);
+}
+
+
+TEST_F(test_Bloom, AutoAddToBloom){
+  Bloom mybloom;
+  shared_ptr<bloom_filter> fltr = mybloom.InitTable(200,true);
+
+  string users_array[20] = {"Ambiteri", "BinderJunky", "ClassyFamous", "Cyberlogy", "EternalComic", "Eyestaffer", "Flirtypwri", "Fozoanog", "InfernoBorg", "Jiggyttom", "Lawnwolfer", "Mitzillst", "Netikaem", "Noamigr", "Phreeksteb", "PrimeSpy", "Rockstonera", "RunFlirty", "Shadesntha", "Twinkle"};
+  for (int i = 0; i < 20; i++) {
+    mybloom.AddToBloom(fltr,users_array[i]);
+  }
+  
+  ASSERT_EQ(fltr->elements, 20);
+  add_points_to_grade(1);
+  ASSERT_FALSE(mybloom.IsUsernamePossiblyAvailable(fltr,"ClassyFamous"));
+  add_points_to_grade(1);
+
+  
+  int count = 0;
+  string test_users_array[20] = {"AnimeGoofy", "Annonscregi", "BoaRight", "ChilledStoop", "Cookyloring", "Darklinote", "DiddyTastic", "Greehoptio", "Grommerli", "Helpfulonda", "HiBear", "Informerch", "Listworkem", "Martzing", "MegaVampire", "Mjetwickso", "NameWonderRun", "NightHood", "Scanneme", "SlayrXcaptain"};
+  for (unsigned int i=0; i < 20; i++) {
+    bool found = true;
+    vector<int> hash_values = mybloom.Hash(test_users_array[i], fltr);
+    int num_hashes = fltr->hashes;
+    for (int j = 0; j < num_hashes; j++) {
+      if (!fltr->bitTable[hash_values[j]]) {
+        found = false;
+        break;
+      }
+    }
+    if (found)  {
+      count++;
+    }
+  }
+  float test_value = 0.0083;
+  float percent_true = count / 100.0000;
   ASSERT_LE(percent_true, test_value);
   add_points_to_grade(2);
 }
@@ -214,6 +252,7 @@ TEST_F(test_Bloom, IsUsernamePossiblyAvailable){
 }
 
 
+
 TEST_F(test_Bloom, FalsePositiveChance){
   Bloom mybloom;
   shared_ptr<bloom_filter> fltr = mybloom.InitTable(100);
@@ -222,8 +261,12 @@ TEST_F(test_Bloom, FalsePositiveChance){
   for (int i = 0; i < 20; i++) {
     mybloom.AddToBloom(fltr,users_array[i]);
   }
-  float test_value = .1;
+  float test_value = .0920;
   ASSERT_LE(mybloom.FalsePositiveChance(fltr),test_value);
+  add_points_to_grade(1);
+  test_value = .0918;
+  ASSERT_GE(mybloom.FalsePositiveChance(fltr),test_value);
+  add_points_to_grade(1);
 
 }
 
@@ -236,14 +279,14 @@ TEST_F(test_Bloom, Clear){
   add_points_to_grade(1);
   for (unsigned int i=0; i < 4; i++) {
     if (i != 28 || i != 94 || i != 74 || i != 18) {
-      ASSERT_FALSE(fltr->table[i]);
+      ASSERT_FALSE(fltr->bitTable[i]);
     } else {
-      ASSERT_TRUE(fltr->table[i]);
+      ASSERT_TRUE(fltr->bitTable[i]);
     }
   }
   mybloom.Clear(fltr);
   for (unsigned int i=0; i < 4; i++) {
-    ASSERT_FALSE(fltr->table[i]);  
+    ASSERT_FALSE(fltr->bitTable[i]);  
     add_points_to_grade(0.1);
   }
 }
