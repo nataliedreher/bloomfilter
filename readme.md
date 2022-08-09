@@ -1,6 +1,6 @@
 # CSPB 2270 – Data Structures - Term Project
 
-#### Data Structure Implemented: Bloom Filter.
+### Data Structure Implemented: Bloom Filter.
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Bloom_filter): "A Bloom filter is a space-efficient probabilistic data structure, conceived by Burton Howard Bloom in 1970, that is used to test whether an element is a member of a set." [[1]](https://en.wikipedia.org/wiki/Bloom_filter)
 
@@ -12,7 +12,7 @@ The major upside to a Bloom Filter is that if you don't mind a small chance of r
 
 An example of a real-world implementation of a Bloom Filter comes from the online publishing platform Medium. They use Bloom Filters to greatly lower the chances of recommending articles a user has aleady read.
 
-#### How to compile and run.
+### How to compile and run.
 
 1. Clone the repository.
 2. CD into the folder that contains this project. Next CD into the build folder.
