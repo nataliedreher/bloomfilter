@@ -60,7 +60,7 @@ protected:
 };
 
 double test_Bloom::total_grade = 0;
-double test_Bloom::max_grade = 100;
+double test_Bloom::max_grade = 49;
 
 /////////////////////////////////////////
 // Test Helper Functions
@@ -93,8 +93,6 @@ TEST_F(test_Bloom, InitFilter){
   add_points_to_grade(1);
   ASSERT_EQ(fltr->size, 100);
   add_points_to_grade(1);
-  //ASSERT_TRUE(fltr->table);
-  //add_points_to_grade(1);
   ASSERT_EQ(fltr->hashes, 4);
   add_points_to_grade(1);
   ASSERT_EQ(fltr->elements, 0);
@@ -112,8 +110,6 @@ TEST_F(test_Bloom, InitFilterAuto){
   add_points_to_grade(1);
   ASSERT_EQ(fltr->size, 100);
   add_points_to_grade(1);
-  //ASSERT_TRUE(fltr->table);
-  //add_points_to_grade(1);
   ASSERT_EQ(fltr->hashes, 7);
   add_points_to_grade(1);
   ASSERT_EQ(fltr->elements, 0);
@@ -125,18 +121,17 @@ TEST_F(test_Bloom, InitFilterAuto){
 }
 
 TEST_F(test_Bloom, Hash){
+  // Requires InitFilter
   Bloom mybloom;
   shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
   vector<int> test_hash_values = mybloom.Hash("banana",fltr);
   vector<int> hash_values; 
-  hash_values.push_back(71);
+  hash_values.push_back(71); 
   hash_values.push_back(5);
   hash_values.push_back(85);
   hash_values.push_back(43);
   ASSERT_EQ(test_hash_values.size(), 4);
   add_points_to_grade(1);
-  //ASSERT_TRUE(fltr->table);
-  //add_points_to_grade(1);
   ASSERT_EQ(fltr->elements, 0);
   add_points_to_grade(1);
   for (unsigned int i=0; i < 4; i++) {
@@ -147,6 +142,7 @@ TEST_F(test_Bloom, Hash){
 
 
 TEST_F(test_Bloom, AddToBloom){
+  // Requires InitFilter
   Bloom mybloom;
   shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
   mybloom.AddToBloom(fltr,"banana"); 
@@ -164,6 +160,7 @@ TEST_F(test_Bloom, AddToBloom){
 }
 
 TEST_F(test_Bloom, BigAddToBloom){
+  // Requires InitFilter, IsUsernamePossiblyAvailable
   Bloom mybloom;
   shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
 
@@ -203,6 +200,7 @@ TEST_F(test_Bloom, BigAddToBloom){
 
 
 TEST_F(test_Bloom, AutoAddToBloom){
+  // Requires InitFilter, IsUsernamePossiblyAvailable
   Bloom mybloom;
   shared_ptr<bloom_filter> fltr = mybloom.InitFilter(200,true);
 
@@ -241,6 +239,7 @@ TEST_F(test_Bloom, AutoAddToBloom){
 
 
 TEST_F(test_Bloom, IsUsernamePossiblyAvailable){
+  // Requires InitFilter
   Bloom mybloom;
   shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
   mybloom.AddToBloom(fltr,"banana");
@@ -254,6 +253,7 @@ TEST_F(test_Bloom, IsUsernamePossiblyAvailable){
 
 
 TEST_F(test_Bloom, FalsePositiveChance){
+  // Requires InitFilter
   Bloom mybloom;
   shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
 
@@ -272,6 +272,7 @@ TEST_F(test_Bloom, FalsePositiveChance){
 
 
 TEST_F(test_Bloom, Clear){
+  // Requires InitFilter
   Bloom mybloom;
   shared_ptr<bloom_filter> fltr = mybloom.InitFilter(100);
   mybloom.AddToBloom(fltr,"banana");

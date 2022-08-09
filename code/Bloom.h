@@ -91,6 +91,10 @@ public:
   void Clear(shared_ptr<bloom_filter> bloom);
 private:
 
+  int hash_primes[32] = {5227, 5231, 5233, 5237, 5261, 5273, 5279, 5281,
+   5297, 5303, 5309, 5323, 5333, 5347, 5351, 5381, 5387, 5393, 5399, 5407, 
+   5413, 5417, 5419, 5431, 5437, 5441, 5443, 5449, 5471, 5477, 5479, 5483};
+
   // These 8 functions take a username and a shared_ptr<bloom_filter>
   // as parameters. They then give hash values that are uses to 
   // set the corresponding indices of bitTable to true.
@@ -102,6 +106,7 @@ private:
   int Hash_6(string str, shared_ptr<bloom_filter> bloom);
   int Hash_7(string str, shared_ptr<bloom_filter> bloom);
   int Hash_8(string str, shared_ptr<bloom_filter> bloom);
+  int Hasher(string str, shared_ptr<bloom_filter> bloom, ull hash);
 
 };
 

@@ -35,7 +35,6 @@ vector<int> Bloom::Hash(string str, shared_ptr<bloom_filter> bloom) {
         hash.pop_back();
     }    
     
-    // Return hash.
     return hash;
 }
 
@@ -92,8 +91,8 @@ shared_ptr<bloom_filter> Bloom::InitFilter(unsigned int size, bool automatic) {
     }
 
     // Create an empty vector<int> named vec2 then set ret->hashValues equal to vec2.
-    //vector<int> vec2;
-    //ret->hashValues = vec2;
+    vector<int> vec2;
+    ret->hashValues = vec2;
 
     // Set the current value of ret->elements equal to zero.
     ret->elements = 0;
